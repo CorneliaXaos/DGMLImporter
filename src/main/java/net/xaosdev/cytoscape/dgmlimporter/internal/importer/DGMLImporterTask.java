@@ -16,10 +16,27 @@
  */
 package net.xaosdev.cytoscape.dgmlimporter.internal.importer;
 
+import java.io.File;
+import org.cytoscape.work.AbstractTask;
+import org.cytoscape.work.TaskMonitor;
+import org.cytoscape.work.Tunable;
+
 /**
- *
+ * The actual import task.  Performs the "bulk" of the work to import our
+ * network.
  * @author Cornelia Schultz
  */
-public class DGMLImporterTask {
+public class DGMLImporterTask extends AbstractTask {
+    
+    @Tunable(description="DGML File", params="fileCategory=unspecified;input=true")
+    public File dgmlFile = null;
+    
+    @Tunable(description="Include Junk Data")
+    public boolean includeJunkData = false;
+
+    @Override
+    public void run(TaskMonitor tm) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
 }
