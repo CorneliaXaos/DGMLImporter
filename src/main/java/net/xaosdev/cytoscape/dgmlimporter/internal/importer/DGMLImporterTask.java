@@ -45,6 +45,35 @@ import org.xml.sax.SAXException;
  */
 public class DGMLImporterTask implements CyNetworkReader {
     
+    /** String constants used for the internal node table. */
+    private static final String[] CY_NODE_ATTRS = {
+        "Id",
+        "Category",
+        "IsPublic",
+        "Label"
+    };
+    /** String constants used to reference the DGML Node data. */
+    private static final String[] VS_NODE_ATTRS = {
+        "Id",
+        "Category",
+        "CodeSchemaProperty_IsPublic",
+        "Label"
+    };
+    /** String constants used for the internal edge table. */
+    private static final String[] CY_EDGE_ATTRS = {
+        "Categories",
+        "IsSourceVirtualized",
+        "IsTargetVirtualized",
+        "Weight"
+    };
+    /** String constants used to reference the DGML Link data. */
+    private static final String[] VS_EDGE_ATTRS = {
+        "Category",
+        "IsSourceVirtualized",
+        "IsTargetVirtualized",
+        "Weight"
+    };
+    
     /** The InputStream to read. */
     private final InputStream in;
     /** The name of the file. */
@@ -80,15 +109,15 @@ public class DGMLImporterTask implements CyNetworkReader {
         // Create Network
         network = Global.getNetworkFactoryService().createNetwork();
         nodeTable = network.getDefaultNodeTable();
-        nodeTable.createColumn("Id", String.class, false);
-        nodeTable.createColumn("Category", String.class, false);
-        nodeTable.createColumn("IsPublic", Boolean.class, false);
-        nodeTable.createColumn("Label", String.class, false);
+        nodeTable.createColumn(CY_NODE_ATTRS[0], String.class, false);
+        nodeTable.createColumn(CY_NODE_ATTRS[1], String.class, false);
+        nodeTable.createColumn(CY_NODE_ATTRS[2], Boolean.class, false);
+        nodeTable.createColumn(CY_NODE_ATTRS[3], String.class, false);
         edgeTable = network.getDefaultEdgeTable();
-        edgeTable.createListColumn("Categories", String.class, false);
-        edgeTable.createColumn("IsSourceVirtualized", Boolean.class, false);
-        edgeTable.createColumn("IsTargetVirtualized", Boolean.class, false);
-        edgeTable.createColumn("Weight", Double.class, false);
+        edgeTable.createListColumn(CY_EDGE_ATTRS[0], String.class, false);
+        edgeTable.createColumn(CY_EDGE_ATTRS[1], Boolean.class, false);
+        edgeTable.createColumn(CY_EDGE_ATTRS[2], Boolean.class, false);
+        edgeTable.createColumn(CY_EDGE_ATTRS[3], Double.class, false);
         if (cancelled) return;
         
         // Read in our DGML Document
@@ -158,18 +187,18 @@ public class DGMLImporterTask implements CyNetworkReader {
                 Element element = (Element) node;
                 
                 // Acquire attributes:
-                String id = element.getAttribute("Id");
-                String category = element.getAttribute("Category");
+                String id = element.getAttribute(VS_NODE_ATTRS[0]);
+                String category = element.getAttribute(VS_NODE_ATTRS[1]);
                 Boolean isPublic = Boolean.parseBoolean(
-                        element.getAttribute("CodeSchemaProperty_IsPublic"));
-                String label = element.getAttribute("Label");
+                        element.getAttribute(VS_NODE_ATTRS[2]));
+                String label = element.getAttribute(VS_NODE_ATTRS[3]);
                 
                 // Create a CyNode, set attributes, and add to CyNetwork
                 CyNode cyNode = network.addNode();
-                nodeTable.getRow(cyNode.getSUID()).set("Id", id);
-                nodeTable.getRow(cyNode.getSUID()).set("Category", category);
-                nodeTable.getRow(cyNode.getSUID()).set("IsPublic", isPublic);
-                nodeTable.getRow(cyNode.getSUID()).set("Lable", label);
+                nodeTable.getRow(cyNode.getSUID()).set(CY_NODE_ATTRS[0], id);
+                nodeTable.getRow(cyNode.getSUID()).set(CY_NODE_ATTRS[1], category);
+                nodeTable.getRow(cyNode.getSUID()).set(CY_NODE_ATTRS[2], isPublic);
+                nodeTable.getRow(cyNode.getSUID()).set(CY_NODE_ATTRS[3], label);
                 
                 // Add node to lookup map to make things easier below:
                 nodeMap.put(id, cyNode);
@@ -203,8 +232,8 @@ public class DGMLImporterTask implements CyNetworkReader {
                 
                 // Now, extract Properties
                 List<String> categories = new ArrayList<>();
-                categories.add(element.getAttribute("Category"));
-                NodeList subList = element.getElementsByTagName("Category");
+                categories.add(element.getAttribute(VS_EDGE_ATTRS[0]));
+                NodeList subList = element.getElementsByTagName(VS_EDGE_ATTRS[0]);
                 for (int jIndex = 0; jIndex < subList.getLength(); jIndex++) {
                     Node subNode = subList.item(jIndex);
                     
@@ -213,20 +242,27 @@ public class DGMLImporterTask implements CyNetworkReader {
                         categories.add(element.getAttribute("Ref"));
                     }
                 }
-                Boolean isSourceVirtualized = Boolean.parseBoolean(
-                        element.getAttribute("IsSourceVirtualized"));
-                Boolean isTargetVirtualized = Boolean.parseBoolean(
-                        element.getAttribute("IsTargetVirtualized"));
-                Double weight = Double.parseDouble(
-                        element.getAttribute("Weight"));
+                Boolean isSourceVirtualized = null;
+                Boolean isTargetVirtualized = null;
+                Double weight = null;
+                
+                if (element.hasAttribute(VS_EDGE_ATTRS[1]))
+                    isSourceVirtualized = Boolean.parseBoolean(
+                            element.getAttribute(VS_EDGE_ATTRS[1]));
+                if (element.hasAttribute(VS_EDGE_ATTRS[2]))
+                    isTargetVirtualized = Boolean.parseBoolean(
+                            element.getAttribute(VS_EDGE_ATTRS[2]));
+                if (element.hasAttribute(VS_EDGE_ATTRS[3]))
+                    weight = Double.parseDouble(
+                            element.getAttribute(VS_EDGE_ATTRS[3]));
                 
                 // Finally, apply them to the EdgeTable
-                edgeTable.getRow(edge.getSUID()).set("Categories", categories);
-                edgeTable.getRow(edge.getSUID()).set("IsSoruceVirtualized",
+                edgeTable.getRow(edge.getSUID()).set(CY_EDGE_ATTRS[0], categories);
+                edgeTable.getRow(edge.getSUID()).set(CY_EDGE_ATTRS[1],
                         isSourceVirtualized);
-                edgeTable.getRow(edge.getSUID()).set("IsTargetVirtualized",
+                edgeTable.getRow(edge.getSUID()).set(CY_EDGE_ATTRS[2],
                         isTargetVirtualized);
-                edgeTable.getRow(edge.getSUID()).set("Weight", weight);
+                edgeTable.getRow(edge.getSUID()).set(CY_EDGE_ATTRS[3], weight);
             }
             
             // Update Progress

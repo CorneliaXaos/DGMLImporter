@@ -11,6 +11,7 @@ import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.service.util.AbstractCyActivator;
 import org.cytoscape.view.model.CyNetworkViewFactory;
+import static org.cytoscape.work.ServiceProperties.TITLE;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -43,6 +44,7 @@ public class DGMLImporterActivator extends AbstractCyActivator {
         
         // Register with Cytoscape
         Properties props = new Properties();
+        props.setProperty(TITLE, "DGML Importer");
         props.setProperty("readerDescription", "DGML Importer");
         props.setProperty("readerId", "dgmlNetworkReader");
         registerService(context, factory, InputStreamTaskFactory.class, props);
