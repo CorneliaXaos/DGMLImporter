@@ -16,65 +16,43 @@
  */
 package net.xaosdev.cytoscape.dgmlimporter.internal;
 
-import org.cytoscape.application.swing.CySwingApplication;
+import org.cytoscape.model.CyNetworkFactory;
 import org.cytoscape.model.CyNetworkManager;
-import org.cytoscape.model.subnetwork.CyRootNetworkManager;
-import org.cytoscape.work.TaskManager;
+import org.cytoscape.view.model.CyNetworkViewFactory;
 
 /**
  * Contains Global Constants used by various portions of the bundle.
- * 
+ *
  * This doesn't eliminate reference passing, but it makes our lives easier, so..
  * @author Cornelia Schultz
  */
 public class Global {
     
     /**
-     * Package member used for accessing Cytoscape functionality in other 
-     * classes.  Used to access the CySwingApplication service.
+     * Package member used for accessing Cytoscape functionality in other
+     * classes.  Used to access the CyNetworkFactory service.
      */
-    static CySwingApplication desktopService = null;
-    /**
-     * Package member used for accessing Cytoscape functionality in other 
-     * classes.  Used to access the TaskManager service.
-     */
-    static TaskManager taskManagerService = null;
-    /**
-     * Package member used for accessing Cytoscape functionality in other 
-     * classes.  Used to access the CyRootNetworkManager service;
-     */
-    static CyRootNetworkManager rootNetworkService = null;
+    static CyNetworkFactory networkFactoryService = null;
+
     /**
      * Package member used for accessing Cytoscape functionality in other 
      * classes.  Used to access the CyNewtorkManager service.
      */
     static CyNetworkManager networkManagerService = null;
+
+    /**
+     * Package member used for accessing Cytoscape functionality in other 
+     * classes.  Used to access the CyNewtorkViewFactory service.
+     */
+    static CyNetworkViewFactory networkViewFactoryService = null;
     
     /**
-     * Gets the Cytoscape Desktop Service.
+     * Gets the Cytoscape NetworkFactory service.
      * 
-     * @return the CySwingApplication object of the current Cytoscape instance.
+     * @return the CyNetworkFactory object of the current Cytoscape instance.
      */
-    public static CySwingApplication getDesktopService() {
-        return desktopService;
-    }
-    
-    /**
-     * Gets the Cytoscape TaskManager Service
-     * 
-     * @return the TaskManager object of the current Cytoscape instance.
-     */
-    public static TaskManager getTaskManagerService() {
-        return taskManagerService;
-    }
-    
-    /**
-     * Gets the Cytoscape RootNetwork service.
-     * 
-     * @return the CyRootNetworkManager object of the current Cytoscape instance.
-     */
-    public static CyRootNetworkManager getRootNetworkService() {
-        return rootNetworkService;
+    public static CyNetworkFactory getNetworkFactoryService() {
+        return networkFactoryService;
     }
     
     /**
@@ -84,5 +62,14 @@ public class Global {
      */
     public static CyNetworkManager getNetworkManagerService() {
         return networkManagerService;
+    }
+    
+    /**
+     * Gets the Cytoscape NetworkViewFactory service.
+     * 
+     * @return the CyNetworkViewFactory object of the current Cytoscape instance.
+     */
+    public static CyNetworkViewFactory getNetworkViewFactoryService() {
+        return networkViewFactoryService;
     }
 }

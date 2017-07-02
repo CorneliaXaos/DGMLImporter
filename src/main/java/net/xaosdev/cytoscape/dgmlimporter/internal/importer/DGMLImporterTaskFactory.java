@@ -16,18 +16,24 @@
  */
 package net.xaosdev.cytoscape.dgmlimporter.internal.importer;
 
-import org.cytoscape.work.AbstractTaskFactory;
+import java.io.InputStream;
+import org.cytoscape.io.CyFileFilter;
+import org.cytoscape.io.read.AbstractInputStreamTaskFactory;
 import org.cytoscape.work.TaskIterator;
 
 /**
  * Constructs a DGMLImporterTask.
  * @author Cornelia Schultz
  */
-public class DGMLImporterTaskFactory extends AbstractTaskFactory {
+public class DGMLImporterTaskFactory extends AbstractInputStreamTaskFactory {
+
+    public DGMLImporterTaskFactory(CyFileFilter fileFilter) {
+        super(fileFilter);
+    }
 
     @Override
-    public TaskIterator createTaskIterator() {
-        return new TaskIterator(new DGMLImporterTask());
+    public TaskIterator createTaskIterator(InputStream in, String string) {
+        return new TaskIterator(new DGMLImporterTask(in, string));
     }
     
 }

@@ -153,14 +153,21 @@
         </dependency>
         <dependency>
             <groupId>org.cytoscape</groupId>
-            <artifactId>swing-application-api</artifactId>
-            <version>3.1.0</version>
+            <artifactId>io-api</artifactId>
+            <version>3.2.0</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.cytoscape</groupId>
-            <artifactId>core-task-api</artifactId>
+            <artifactId>work-api</artifactId>
+            <version>3.2.0</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.cytoscape</groupId>
+            <artifactId>model-api</artifactId>
             <version>3.2.0</version>
             <type>jar</type>
             <scope>provided</scope>
